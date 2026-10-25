@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#17121f">
+<title>Vice Calendar — Neon City Edition</title>
+<style>
+:root{--bg:#15111b;--panel:#211927;--pink:#ff416d;--orange:#ffad6e;--muted:#c7abcF;--line:#453049}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#482348 0,#211525 38%,#100e16 80%);color:#fff;font-family:Arial,Helvetica,sans-serif;min-height:100vh;padding:20px}
+.app{max-width:760px;margin:0 auto;background:#17131d;border:1px solid #49304b;border-radius:22px;overflow:hidden;box-shadow:0 18px 70px #0008}
+.hero{padding:22px;background:linear-gradient(130deg,#512747,#251a35 60%,#3e1c35)}
+.brand{display:flex;align-items:center;gap:12px}.logo{background:var(--pink);padding:12px;border-radius:12px;font-size:24px}
+h1{font-size:clamp(20px,4vw,29px);letter-spacing:1.5px;margin:0}.tag{color:#ff9eb5;font-size:11px;letter-spacing:2px;margin-top:5px}
+.banner{margin-top:20px;padding:22px 18px;border-radius:15px;background:linear-gradient(155deg,#f36d81 0%,#a83f78 34%,#43224d 67%,#171b37 100%);position:relative;overflow:hidden;min-height:145px}
+.banner:before{content:"";position:absolute;inset:auto -20px -55px 35%;height:150px;background:repeating-linear-gradient(90deg,#161321 0 3px,transparent 3px 45px);opacity:.5;transform:skewY(-8deg)}
+.palms{position:absolute;right:12px;top:10px;font-size:46px;opacity:.75}.banner h2{position:relative;margin:0 0 8px;font-size:clamp(23px,5vw,36px);text-transform:uppercase}.banner p{position:relative;margin:0;color:#ffe3ee;font-size:13px}
+main{padding:20px}.monthbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:17px}.monthbar h2{margin:0;text-align:center;font-size:23px}.nav{border:1px solid var(--line);border-radius:10px;background:#302138;color:white;font-size:24px;width:42px;height:42px;cursor:pointer}.week,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}.week div{text-align:center;color:#cba8d2;font-size:11px;padding:7px 0;font-weight:bold}
+.day{border:1px solid #33253a;border-radius:10px;min-height:57px;background:#211a29;color:#f8edf9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;font-size:15px;position:relative}.day:hover{border-color:#ff8eb1}.day.outside{color:#716579;background:#19151f}.day.selected{outline:2px solid #c98bda;background:#603969}.day.special{background:linear-gradient(145deg,#ff416d,#bd2f73);border-color:#ffb4c8;font-weight:bold}.day .dot{width:7px;height:7px;border-radius:50%;background:var(--pink);box-shadow:0 0 7px #ff416d,0 0 14px #ff416d}.day.special .dot{background:#fff;box-shadow:0 0 8px white}
+.legend{display:flex;align-items:center;gap:8px;color:#ffb8c9;font-size:12px;margin:15px 0 20px}.legend .dot{width:8px;height:8px;background:var(--pink);border-radius:50%;box-shadow:0 0 8px var(--pink)}
+.detail{background:#261d30;border:1px solid var(--line);border-radius:16px;padding:16px}.detailtop{display:flex;align-items:center;gap:14px}.datecard{background:#493151;border-radius:12px;padding:12px 14px;text-align:center;min-width:75px}.datecard.special{background:var(--pink)}.datecard small{display:block;font-size:11px}.datecard strong{display:block;font-size:30px;margin:3px 0}.detail h3{font-size:17px;margin:0 0 6px}.detail p{margin:0;color:#d5bfdc;font-size:13px;line-height:1.45}.detail .note{color:#ff9eb5;margin-top:6px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.controls button,.controls input{border:1px solid #5b3b60;border-radius:10px;padding:11px 12px;background:#30213a;color:#fff;font-size:13px}.controls button{cursor:pointer}.controls .primary{background:var(--pink);border-color:var(--pink);font-weight:bold}.controls input{flex:1;min-width:150px}.event{display:flex;align-items:center;gap:9px;margin-top:13px;background:#34243d;padding:10px;border-radius:9px;font-size:13px}.event span{flex:1}.event button{background:transparent;color:#ff9eb5;border:0;cursor:pointer;font-size:17px}.footer{text-align:center;color:#8f7897;font-size:11px;padding:0 20px 20px}
+@media(max-width:440px){body{padding:8px}.hero,main{padding:14px}.day{min-height:47px;border-radius:8px}.week,.days{gap:4px}.banner{min-height:130px}.monthbar h2{font-size:19px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="hero">
+  <div class="brand"><div class="logo">▦</div><div><h1>VICE CALENDAR</h1><div class="tag">NEON CITY • YOUR DAYS</div></div></div>
+  <section class="banner"><div class="palms">🌴</div><h2>Make every day legendary.</h2><p>Plan your missions. Mark your milestones. Own your calendar.</p></section>
+</header>
+<main>
+  <div class="monthbar"><button class="nav" id="prev" aria-label="Previous month">‹</button><h2 id="monthTitle"></h2><button class="nav" id="next" aria-label="Next month">›</button></div>
+  <div class="week"><div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div></div>
+  <div class="days" id="days"></div>
+  <div class="legend"><span class="dot"></span> Today — automatic live date <span style="margin-left:auto;color:#ff9eb5">★ Nov 19, 2026 = Special</span></div>
+  <section class="detail">
+    <div class="detailtop"><div class="datecard" id="dateCard"><small id="detailMonth"></small><strong id="detailDay"></strong><small id="detailYear"></small></div><div><h3 id="detailTitle">TODAY'S MISSION</h3><p id="detailDate"></p><p class="note" id="detailNote"></p></div></div>
+    <div id="eventList"></div>
+    <div class="controls"><input id="eventInput" placeholder="Add an event or reminder…"><button class="primary" id="saveEvent">＋ Save event</button></div>
+    <div class="controls"><button id="goToday">Go to Today</button><button id="goSpecial">★ 19 November 2026</button></div>
+  </section>
+</main>
+<div class="footer">VICE CALENDAR • FAN-MADE GTA-INSPIRED CONCEPT</div>
+</div>
+<script>
+const special='2026-11-19';
+let view=new Date(); view=new Date(view.getFullYear(),view.getMonth(),1);
+let selected=key(new Date());
+let events={}; try{events=JSON.parse(localStorage.getItem('viceCalendarEvents')||'{}')}catch(e){}
+const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function key(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function localDate(k){const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)}
+function render(){
+ document.getElementById('monthTitle').textContent=`${months[view.getMonth()]} ${view.getFullYear()}`;
+ const host=document.getElementById('days');host.innerHTML='';
+ const first=new Date(view.getFullYear(),view.getMonth(),1).getDay();
+ const start=new Date(view.getFullYear(),view.getMonth(),1-first);
+ for(let i=0;i<42;i++){
+  const dt=new Date(start);dt.setDate(start.getDate()+i);const k=key(dt);
+  const b=document.createElement('button');b.className='day'+(dt.getMonth()!==view.getMonth()?' outside':'')+(k===selected?' selected':'')+(k===special?' special':'');
+  b.innerHTML=(k===special?'<span style="font-size:9px">★</span>':'')+`<span>${dt.getDate()}</span>`+(k===key(new Date())?'<span class="dot"></span>':events[k]?.length?'<span class="dot" style="background:#ffad6e;box-shadow:none"></span>':'');
+  b.setAttribute('aria-label',dt.toDateString()+(k===key(new Date())?', today':''));b.onclick=()=>{selected=k;render()};host.appendChild(b);
+ }
+ const d=localDate(selected);
+ document.getElementById('dateCard').classList.toggle('special',selected===special);
+ document.getElementById('detailMonth').textContent=months[d.getMonth()].slice(0,3).toUpperCase();
+ document.getElementById('detailDay').textContent=d.getDate();document.getElementById('detailYear').textContent=d.getFullYear();
+ document.getElementById('detailDate').textContent=d.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+ document.getElementById('detailTitle').textContent=selected===key(new Date())?"TODAY'S MISSION":selected===special?'SPECIAL DATE':'SELECTED DATE';
+ document.getElementById('detailNote').textContent=selected===special?'Your special milestone date.':'Your next story starts here.';
+ const list=document.getElementById('eventList');list.innerHTML='';
+ (events[selected]||[]).forEach((ev,i)=>{const row=document.createElement('div');row.className='event';const label=document.createElement('span');label.textContent='◆ '+ev;const del=document.createElement('button');del.textContent='×';del.title='Delete event';del.onclick=()=>{events[selected].splice(i,1);if(!events[selected].length)delete events[selected];persist();render()};row.append(label,del);list.appendChild(row)});
+}
+function persist(){localStorage.setItem('viceCalendarEvents',JSON.stringify(events))}
+document.getElementById('prev').onclick=()=>{view.setMonth(view.getMonth()-1);render()};
+document.getElementById('next').onclick=()=>{view.setMonth(view.getMonth()+1);render()};
+document.getElementById('goToday').onclick=()=>{const d=new Date();view=new Date(d.getFullYear(),d.getMonth(),1);selected=key(d);render()};
+document.getElementById('goSpecial').onclick=()=>{view=new Date(2026,10,1);selected=special;render()};
+document.getElementById('saveEvent').onclick=()=>{const input=document.getElementById('eventInput');const val=input.value.trim();if(!val){input.focus();return}events[selected]??=[];events[selected].push(val);persist();input.value='';render()};
+document.getElementById('eventInput').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('saveEvent').click()});
+render();
+// Re-check today's marker if the page stays open over midnight.
+setInterval(()=>{const now=key(new Date());if(now!==window.lastToday){window.lastToday=now;render()}},30000);
+</script>
+</body>
+</html>
